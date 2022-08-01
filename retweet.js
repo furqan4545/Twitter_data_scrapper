@@ -155,7 +155,6 @@ const getretweets = async (token, endpointURL) => {
   }
 }
 
-
 app.get("/retweets/:tid", async(req, res) => {
     
   try {

@@ -10,30 +10,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());  
 
-const csvWriter = createCsvWriter({
-    path: 'followers.csv',
-    header: [
-      {id: 'name', title: 'Name'},
-      {id: 'location', title: 'Location'},
-      {id: 'id', title: 'Id'},
-      {id: 'username', title: 'Username'},
-      {id: 'verified', title: 'Verified'},
-      {id: 'created_at', title: 'Created_at'},
-      {id: 'followers_count', title: 'Followers_count'},
-      {id: 'following_count', title: 'Following_count'},
-      {id: 'tweet_count', title: 'Tweet_count'},
-      {id: 'listed_count', title: 'Listed_count'},
-      {id: 'description', title: 'Description'}
-    ]
-  });
+// const csvWriter = createCsvWriter({
+//     path: 'followers.csv',
+//     header: [
+//       {id: 'name', title: 'Name'},
+//       {id: 'location', title: 'Location'},
+//       {id: 'id', title: 'Id'},
+//       {id: 'username', title: 'Username'},
+//       {id: 'verified', title: 'Verified'},
+//       {id: 'created_at', title: 'Created_at'},
+//       {id: 'followers_count', title: 'Followers_count'},
+//       {id: 'following_count', title: 'Following_count'},
+//       {id: 'tweet_count', title: 'Tweet_count'},
+//       {id: 'listed_count', title: 'Listed_count'},
+//       {id: 'description', title: 'Description'}
+//     ]
+//   });
 
 // Fetch the followers of a user account, by ID
 // https://developer.twitter.com/en/docs/twitter-api/users/follows/quick-start
 
 // this is the ID for @TwitterDev
-const userId = 2244994945;
-const url = `https://api.twitter.com/2/users/${userId}/followers`;
-const bearerToken = 'AAAAAAAAAAAAAAAAAAAAAK96ZgEAAAAAyUsPg2HSWmAPV813iso8vp1o0W4%3DspiZOVKaSe1i4em9hvXRSXyGslJ0Y2mGwR0Kp4PziirEhFwf7U';
+// const userId = 2244994945;
+// const url = `https://api.twitter.com/2/users/${userId}/followers`;
+// const bearerToken = 'AAAAAAAAAAAAAAAAAAAAAK96ZgEAAAAAyUsPg2HSWmAPV813iso8vp1o0W4%3DspiZOVKaSe1i4em9hvXRSXyGslJ0Y2mGwR0Kp4PziirEhFwf7U';
 
 const getFollowers = async () => {
     let users = [];
@@ -92,7 +92,7 @@ const getFollowers = async () => {
     }
 }
 
-const getPage = async (params, options, nextToken) => {
+const getPage = async (params, options, nextToken, url) => {
     if (nextToken) {
         params.pagination_token = nextToken;
     }
@@ -112,7 +112,7 @@ const getPage = async (params, options, nextToken) => {
 
 // getFollowers();
 
-const gettFollowers = async () => {
+const gettFollowers = async (url,bearerToken) => {
     let users = [];
     let params = {
         "max_results": 1000,
@@ -130,7 +130,7 @@ const gettFollowers = async () => {
     let nextToken = null;
     console.log("Retrieving followers...");
     while (hasNextPage) {
-        let resp = await getPage(params, options, nextToken);
+        let resp = await getPage(params, options, nextToken, url);
         if (resp && resp.meta && resp.meta.result_count && resp.meta.result_count > 0) {
             if (resp.data) {
                 users.push.apply(users, resp.data);
@@ -151,17 +151,14 @@ const gettFollowers = async () => {
     return users;
 }
 
-app.get("/followers", async(req, res) => {
+app.get("/followers/:tid", async(req, res) => {
     
     try {
+        const {tid} = req.params;
+        const url = `https://api.twitter.com/2/users/${tid}/followers`;
+        const bearerToken = 'AAAAAAAAAAAAAAAAAAAAAK96ZgEAAAAAyUsPg2HSWmAPV813iso8vp1o0W4%3DspiZOVKaSe1i4em9hvXRSXyGslJ0Y2mGwR0Kp4PziirEhFwf7U';
 
-        // if (!uid || !created_at || !name || !username) {
-        //     res.json({
-        //         "msg": "Please fill all the fields", 
-        //         "status" : 301
-        //     });
-        // }
-        var uusers = await gettFollowers();
+        var uusers = await gettFollowers(url, bearerToken);
 
         let data_length = uusers.length;
         for (j = 0; j < data_length; j++) {
