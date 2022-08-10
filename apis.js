@@ -182,7 +182,7 @@ app.get("/followings/:tid", async(req, res) => {
             var listed_count = uusers[j].public_metrics.listed_count;
             var location = uusers[j].location;
 
-            var ress = await client.query("INSERT INTO following (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location) VALUES ($1, $2,$3,$4,$5,$6,$7, $8,$9,$10,$11) RETURNING *", [verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location]);
+            var ress = await client.query("INSERT INTO following (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, p_id) VALUES ($1, $2,$3,$4,$5,$6,$7, $8,$9,$10,$11,$12) RETURNING *", [verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, tid]);
              
         }
 
@@ -287,7 +287,7 @@ app.get("/retweets/:tid", async(req, res) => {
             listed_count = uusers[j].public_metrics.listed_count;
             location = uusers[j].location;
   
-            ress = await client.query("INSERT INTO retweeted_by (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *", [verified, id, description, username, created_at, pname, followers_count, following_count, tweet_count, listed_count, location]);
+            ress = await client.query("INSERT INTO retweeted_by (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, p_id) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *", [verified, id, description, username, created_at, pname, followers_count, following_count, tweet_count, listed_count, location, tid]);
   
         }
   
@@ -393,7 +393,7 @@ app.get("/quote_tweets/:tid", async(req, res) => {
             like_count = uusers[j].public_metrics.like_count;
             quote_count = uusers[j].public_metrics.quote_count;
 
-            var ress = await client.query("INSERT INTO quote_tweets (created_at, text, id, retweet_count, reply_count, like_count, quote_count) VALUES ($1, $2,$3,$4,$5,$6,$7) RETURNING *", [created_at, text, id, retweet_count, reply_count, like_count, quote_count]);
+            var ress = await client.query("INSERT INTO quote_tweets (created_at, text, id, retweet_count, reply_count, like_count, quote_count, p_id) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *", [created_at, text, id, retweet_count, reply_count, like_count, quote_count, tid]);
 
         }
 
@@ -495,7 +495,7 @@ const get_liking_users = async (token, endpointURL) => {
             listed_count = uusers[j].public_metrics.listed_count;
             description = uusers[j].description;
   
-            var ress = await client.query("INSERT INTO liking_users (name, location, id, username, verified, created_at, followers_count, following_count, tweet_count, listed_count, description) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *", [pname, location, id, username, verified, created_at, followers_count, following_count, tweet_count, listed_count, description]);
+            var ress = await client.query("INSERT INTO liking_users (name, location, id, username, verified, created_at, followers_count, following_count, tweet_count, listed_count, description, p_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *", [pname, location, id, username, verified, created_at, followers_count, following_count, tweet_count, listed_count, description, tid]);
         }
   
         if (ress.rowCount > 0) {
@@ -604,7 +604,7 @@ const get_liking_users = async (token, endpointURL) => {
             like_count = uusers[j].public_metrics.like_count;
             quote_count = uusers[j].public_metrics.quote_count;
   
-            var ress = await client.query("INSERT INTO liked_tweets (lang, place_id, id, source, text, created_at, author_id, retweet_count, reply_count, like_count, quote_count) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *", [lang, place_id, id, source, text, created_at, author_id, retweet_count, reply_count, like_count, quote_count]);
+            var ress = await client.query("INSERT INTO liked_tweets (lang, place_id, id, source, text, created_at, author_id, retweet_count, reply_count, like_count, quote_count, p_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11, $12) RETURNING *", [lang, place_id, id, source, text, created_at, author_id, retweet_count, reply_count, like_count, quote_count, tid]);
         }
   
         if (ress.rowCount > 0) {
@@ -696,7 +696,7 @@ async function getRequest_uu(uname, endpointURL, token) {
             var listed_count= uusers.data[j].public_metrics.listed_count;
             var location= uusers.data[j].location;
 
-            var ress = await client.query("INSERT INTO user_details (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location) VALUES ($1, $2,$3,$4,$5,$6,$7, $8,$9,$10,$11) RETURNING *", [verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location]);
+            var ress = await client.query("INSERT INTO user_details (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, p_id) VALUES ($1, $2,$3,$4,$5,$6,$7, $8,$9,$10,$11, $12) RETURNING *", [verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, uname]);
 
         }
 
@@ -806,7 +806,7 @@ app.get("/get_tweets/:tid", async(req, res) => {
             like_count = uusers[j].public_metrics.like_count;
             quote_count = uusers[j].public_metrics.quote_count;
 
-            var ress = await client.query("INSERT INTO get_tweets (created_at, text, author_id, id, source, lang, retweet_count, reply_count, like_count, quote_count) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *", [created_at, text, author_id, id, source, lang, retweet_count, reply_count, like_count, quote_count]);
+            var ress = await client.query("INSERT INTO get_tweets (created_at, text, author_id, id, source, lang, retweet_count, reply_count, like_count, quote_count, p_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10, $11) RETURNING *", [created_at, text, author_id, id, source, lang, retweet_count, reply_count, like_count, quote_count, tid]);
 
         }
 
@@ -829,6 +829,49 @@ app.get("/get_tweets/:tid", async(req, res) => {
 })
 
 
+app.get("/followers/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM followers WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
+
+app.get("/followings/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM following WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
+
+app.get("/quote_tweets/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM quote_tweets WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
+
+app.get("/retweets/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM retweeted_by WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
 
 
 
