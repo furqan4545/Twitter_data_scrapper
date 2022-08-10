@@ -132,7 +132,7 @@ app.get("/followers/:tid", async(req, res) => {
             var listed_count= uusers[j].public_metrics.listed_count;
             var location= uusers[j].location;
 
-            var ress = await client.query("INSERT INTO followers (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location) VALUES ($1, $2,$3,$4,$5,$6,$7, $8,$9,$10,$11) RETURNING *", [verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location]);
+            var ress = await client.query("INSERT INTO followers (verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, p_id) VALUES ($1, $2,$3,$4,$5,$6,$7, $8,$9,$10,$11,$12) RETURNING *", [verified, id, description, username, created_at, name, followers_count, following_count, tweet_count, listed_count, location, tid]);
 
         }
 
