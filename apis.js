@@ -873,6 +873,49 @@ app.get("/retweets/user/:tid", async(req, res) => {
 
 })
 
+app.get("/get_tweets/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM get_tweets WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
+
+app.get("/liking_users/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM liking_users WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
+
+app.get("/liking_tweets/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM liked_tweets WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
+
+app.get("/get_user/user/:tid", async(req, res) => {
+    const {tid} = req.params;
+
+    // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
+    const query = await client.query("SELECT * FROM liked_tweets WHERE p_id=$1", [tid]);
+    // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
+
+    res.json(query.rows);
+
+})
 
 
 // database connection here. //
