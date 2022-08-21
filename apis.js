@@ -910,7 +910,7 @@ app.get("/get_user/user/:tid", async(req, res) => {
     const {tid} = req.params;
 
     // cosnt query = await client.query("SELECT * FROM sensor_data2 INNER JOIN users on sensor_data2.uname=users.name");
-    const query = await client.query("SELECT * FROM liked_tweets WHERE p_id=$1", [tid]);
+    const query = await client.query("SELECT * FROM user_details WHERE p_id=$1", [tid]);
     // query = await client.query("SELECT * FROM sensor_data INNER JOIN users on sensor_data.uname=users.uname WHERE sensor_data.uname=$1", [uname]);
 
     res.json(query.rows);
