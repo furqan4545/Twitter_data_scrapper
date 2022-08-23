@@ -428,10 +428,13 @@ const get_liking_users = async (token, endpointURL) => {
         console.dir(response, {
           depth: null,
         });
+        console.log(response);
+        if (response.errors != null) {stopped = true; break}
+
         result_count = response.meta.result_count;
         if (result_count == 0) {stopped = true; break}
         else if (response.status == 503) {stopped = true; break}
-  
+        
         data_length = response.data.length;
         for (j = 0; j < data_length; j++) {
             data.push(response.data[j])
@@ -479,6 +482,13 @@ const get_liking_users = async (token, endpointURL) => {
         const url = `https://api.twitter.com/2/tweets/${tid}/liking_users`;
   
         var uusers = await get_liking_users(token, url);
+        if (uusers.length == 0) {
+            res.json({
+                "msg": "No data found",
+                "status" : 301
+            });
+        }
+        else{
   
         let data_length = uusers.length;
         for (j = 0; j < data_length; j++) {
@@ -510,6 +520,7 @@ const get_liking_users = async (token, endpointURL) => {
                 "status" : 301
             });
         }
+    }
     } catch (error) {
         console.log(error.message);
         console.log("Error occured");
